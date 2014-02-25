@@ -5,7 +5,6 @@ include /usr/share/dpkg/buildflags.mk
 
 export PYBUILD_DESTDIR_python3=debian/python3-zmq/
 export PYBUILD_DESTDIR_pypy=debian/pypy-zmq/
-export PYBUILD_DEBUG=1
 export DH_VERBOSE=1
 
 %:
