@@ -4,27 +4,21 @@ DPKG_EXPORT_BUILDFLAGS = 1
 include /usr/share/dpkg/buildflags.mk
 
 export PYBUILD_DESTDIR_python3=debian/python3-zmq/
-export PYBUILD_DESTDIR_pypy=debian/pypy-zmq/
+export PYBUILD_DESTDIR_python2=debian/python-zmq/
 export DH_VERBOSE=1
 
 %:
-	dh $@ --with python3,pypy --buildsystem=pybuild
+	dh $@ --with python2,python3 --buildsystem=pybuild
 
 override_dh_install:
 	dh_install
 	# remove a couple of header files already in python3-zmq
 	find debian/python3-zmq-dbg/usr/lib/ ! -type d ! -name '*.so' -delete || true
-	# cffi is only used for pypy
 	rm -rf debian/python3-zmq/usr/lib/python*/dist-packages/zmq/backend/cffi/
-	# cython core is only used for cpython
-	rm -rf debian/pypy-zmq/usr/lib/pypy/dist-packages/zmq/backend/cython
-
-	# build shared libraries for pypy and install them
-	pypy -c 'import zmq'
-	mv -v zmq/backend/cffi/__pycache__/*so \
-	  $(CURDIR)/debian/pypy-zmq/usr/lib/pypy/dist-packages/zmq/backend/cffi
-	# put there by install, not needed
-	rm -f $(CURDIR)/debian/pypy-zmq/usr/lib/pypy/dist-packages/_cffi*.so
 
 	find debian/python3-zmq -depth -empty -exec rmdir {} \;
-	find debian/pypy-zmq -depth -empty -exec rmdir {} \;
+
+	find debian/python-zmq-dbg/usr/lib/ ! -type d ! -name '*.so' -delete || true
+	rm -rf debian/python-zmq/usr/lib/python*/dist-packages/zmq/backend/cffi/
+
+	find debian/python-zmq -depth -empty -exec rmdir {} \;
