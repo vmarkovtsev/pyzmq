@@ -1,4 +1,4 @@
-pyzmq (14.0.2-smaug) trusty; urgency=high
+pyzmq (14.3.2-smaug) trusty; urgency=high
 
   * rebuild against zeromq 4.1.x
 
